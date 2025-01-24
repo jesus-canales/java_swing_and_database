@@ -9,7 +9,8 @@ public class StudentEntity {
     private String email;
     private String phone;
 
-    public StudentEntity(String name, String lastName, int age, String country, String email, String phone) {
+    public StudentEntity(int id, String name, String lastName, int age, String country, String email, String phone) {
+        this.id = id;
         this.name = name;
         this.lastName = lastName;
         this.age = age;

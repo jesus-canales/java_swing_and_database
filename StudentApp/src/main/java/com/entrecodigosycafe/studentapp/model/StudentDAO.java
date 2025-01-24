@@ -14,14 +14,15 @@ public class StudentDAO {
 
     public List<StudentEntity> listarRegistros () throws SQLException {
         List<StudentEntity> lista = new ArrayList<>();
-        String sql = "select * from estudiantes";
+        String query = "select id, nombre, apellidos, edad, pais, correo, celular  from estudiantes";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             Statement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
                 StudentEntity estudiante = new StudentEntity(
+                        rs.getInt("id"),
                         rs.getString("nombre"),
                         rs.getString("apellidos"),
                         rs.getInt("edad"),

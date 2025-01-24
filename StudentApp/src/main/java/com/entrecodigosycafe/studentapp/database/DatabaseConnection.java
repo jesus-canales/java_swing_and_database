@@ -5,12 +5,22 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private static final String URL = "jdbc:mysql://localhost:33060/studentdb";
+    private static final String URL = "jdbc:mysql://localhost:33060/studentdb?useSSL=false&serverTimezone=UTC";
     private static final String USER = "root";
     private static final String PASSWORD = "entrecodigosycafe";
 
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+    public static Connection getConnection() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (ClassNotFoundException e) {
+            System.out.println("Error, driver no encontrado");
+            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Error no se pudo conectar a la base de dastos");
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static void testConnection() {
