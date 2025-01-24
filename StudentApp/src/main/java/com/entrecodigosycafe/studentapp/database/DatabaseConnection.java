@@ -14,8 +14,8 @@ public class DatabaseConnection {
     }
 
     public static void testConnection() {
-        try (Connection conexion = getConnection()) {
-            if (conexion != null) {
+        try (Connection conn = getConnection()) {
+            if (conn != null) {
                 System.out.println("✅ Conexion establecida a la base de datos.");
             }
         } catch (SQLException e) {
