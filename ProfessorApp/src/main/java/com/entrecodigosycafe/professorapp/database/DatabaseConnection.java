@@ -1,4 +1,4 @@
-package com.entrecodigosycafe.professorapp.controller;
+package com.entrecodigosycafe.professorapp.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
