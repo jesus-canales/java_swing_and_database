@@ -10,6 +10,7 @@ public class ProfessorEntity {
     private String technologies;
     private String modality;
 
+
     public ProfessorEntity(String name, String lastName, String birthDate, String placeOfOrigin, String gender, String technologies, String modality) {
         this.name = name;
         this.lastName = lastName;

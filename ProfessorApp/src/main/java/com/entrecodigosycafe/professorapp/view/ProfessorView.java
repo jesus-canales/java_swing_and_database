@@ -1,6 +1,7 @@
 package com.entrecodigosycafe.professorapp.view;
 
 import com.entrecodigosycafe.professorapp.controller.ProfessorController;
+import com.entrecodigosycafe.professorapp.service.ProfessorService;
 import org.jdatepicker.JDatePanel;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -21,12 +22,14 @@ public class ProfessorView extends JFrame {
     private JCheckBox chbJava, chbPython, chbJavaScript, chbSQL;
     private JButton btnGuardar;
 
-
     public ProfessorView() {
+        ProfessorService professorService = new ProfessorService();
+        this.professorController = new ProfessorController(professorService);
+
         this.setTitle("Registrar datos de Profesor");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLocationRelativeTo(null);
         this.setSize(600, 400);
+        this.setLocationRelativeTo(null);
         this.setResizable(false);
 
         this.add(contentRegister());
@@ -41,7 +44,7 @@ public class ProfessorView extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.anchor = GridBagConstraints.WEST;
+
 
         Color fondoColor = new Color(179, 200, 207);
 
@@ -172,6 +175,8 @@ public class ProfessorView extends JFrame {
         JDatePanelImpl datePanel = new JDatePanelImpl(model, properties);
         return new JDatePickerImpl(datePanel, new DateLabelFormatter());
     }
+    private ProfessorController professorController;
+
 
     private void saveProfessor() {
         String nombre = txtNombre.getText().trim();
@@ -180,22 +185,24 @@ public class ProfessorView extends JFrame {
         String lugarProcedencia = (String) cmbPlaceOfOrigin.getSelectedItem();
         String genero = rdbtnMale.isSelected() ? "Masculino" : rdbtnFemale.isSelected() ? "Femenino": "";
 
-        String tecnologias = "";
-        if (chbJava.isSelected()) tecnologias += "Java";
-        if (chbPython.isSelected()) tecnologias += "Python";
-        if (chbJavaScript.isSelected()) tecnologias += "JavaScript";
-        if (chbSQL.isSelected()) tecnologias += "SQL";
+        StringBuilder tecnologias = new StringBuilder();
+        if (chbJava.isSelected()) tecnologias.append("Java, ");
+        if (chbPython.isSelected()) tecnologias.append("Python, ");
+        if (chbJavaScript.isSelected()) tecnologias.append("JavaScript, ");
+        if (chbSQL.isSelected()) tecnologias.append("SQL, ");
+        if (tecnologias.length() > 0) tecnologias.setLength(tecnologias.length() - 2);
 
         String modalidad = (String) cmbModality.getSelectedItem();
-        if (nombre.isEmpty() || apellido.isEmpty() || fechaNacimiento.isEmpty() || lugarProcedencia.equals("Seleccione") || genero.isEmpty() || tecnologias.isEmpty() || modalidad.equals("Seleccione")) {
-            JOptionPane.showMessageDialog(rootPane, "Todos los datos son obligatorios", "Error", JOptionPane.INFORMATION_MESSAGE);
+        if (nombre.isEmpty() || apellido.isEmpty() || fechaNacimiento.isEmpty() ||
+                "Seleccione".equals(lugarProcedencia) || genero.isEmpty() ||
+                tecnologias.length() == 0 || "Seleccione".equals(modalidad)) {
+            JOptionPane.showMessageDialog(this, "Todos los datos son obligatorios", "Error", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
-        ProfessorController professorController = new ProfessorController();
-        professorController.guardarProfessor(nombre, apellido, fechaNacimiento, lugarProcedencia, genero, tecnologias.toString(), modalidad);
+        boolean exito = professorController.saveProfessor(nombre, apellido, fechaNacimiento, lugarProcedencia, genero, tecnologias.toString(), modalidad);
 
-        JOptionPane.showMessageDialog(rootPane, "Profesor registrado correctamente", "Profesor registrado", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Profesor registrado correctamente", "Profesor registrado", JOptionPane.INFORMATION_MESSAGE);
 
         limpiarCampos();
     }
