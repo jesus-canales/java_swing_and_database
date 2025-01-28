@@ -1,5 +1,6 @@
 package com.entrecodigosycafe.professorapp.view;
 
+import com.entrecodigosycafe.professorapp.controller.ProfessorController;
 import org.jdatepicker.JDatePanel;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -7,6 +8,8 @@ import org.jdatepicker.impl.UtilCalendarModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Properties;
 
 public class ProfessorView extends JFrame {
@@ -17,6 +20,7 @@ public class ProfessorView extends JFrame {
     private JRadioButton rdbtnMale, rdbtnFemale;
     private JCheckBox chbJava, chbPython, chbJavaScript, chbSQL;
     private JButton btnGuardar;
+
 
     public ProfessorView() {
         this.setTitle("Registrar datos de Profesor");
@@ -148,6 +152,13 @@ public class ProfessorView extends JFrame {
         gbc.anchor = GridBagConstraints.CENTER;
         pnlRegister.add(btnGuardar, gbc);
 
+        btnGuardar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                saveProfessor();
+                limpiarCampos();
+            }
+        });
+
         return pnlRegister;
     }
 
@@ -161,4 +172,46 @@ public class ProfessorView extends JFrame {
         JDatePanelImpl datePanel = new JDatePanelImpl(model, properties);
         return new JDatePickerImpl(datePanel, new DateLabelFormatter());
     }
+
+    private void saveProfessor() {
+        String nombre = txtNombre.getText().trim();
+        String apellido = txtApellido.getText().trim();
+        String fechaNacimiento = datePicker.getJFormattedTextField().getText();
+        String lugarProcedencia = (String) cmbPlaceOfOrigin.getSelectedItem();
+        String genero = rdbtnMale.isSelected() ? "Masculino" : rdbtnFemale.isSelected() ? "Femenino": "";
+
+        String tecnologias = "";
+        if (chbJava.isSelected()) tecnologias += "Java";
+        if (chbPython.isSelected()) tecnologias += "Python";
+        if (chbJavaScript.isSelected()) tecnologias += "JavaScript";
+        if (chbSQL.isSelected()) tecnologias += "SQL";
+
+        String modalidad = (String) cmbModality.getSelectedItem();
+        if (nombre.isEmpty() || apellido.isEmpty() || fechaNacimiento.isEmpty() || lugarProcedencia.equals("Seleccione") || genero.isEmpty() || tecnologias.isEmpty() || modalidad.equals("Seleccione")) {
+            JOptionPane.showMessageDialog(rootPane, "Todos los datos son obligatorios", "Error", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        ProfessorController professorController = new ProfessorController();
+        professorController.guardarProfessor(nombre, apellido, fechaNacimiento, lugarProcedencia, genero, tecnologias.toString(), modalidad);
+
+        JOptionPane.showMessageDialog(rootPane, "Profesor registrado correctamente", "Profesor registrado", JOptionPane.INFORMATION_MESSAGE);
+
+        limpiarCampos();
+    }
+
+    private void limpiarCampos() {
+        txtNombre.setText("");
+        txtApellido.setText("");
+        datePicker.getJFormattedTextField().setText("");
+        cmbPlaceOfOrigin.setSelectedIndex(0);
+        rdbtnMale.setSelected(false);
+        rdbtnFemale.setSelected(false);
+        chbJava.setSelected(false);
+        chbPython.setSelected(false);
+        chbJavaScript.setSelected(false);
+        chbSQL.setSelected(false);
+        cmbModality.setSelectedIndex(0);
+    }
+
 }
