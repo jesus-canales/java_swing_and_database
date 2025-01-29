@@ -53,7 +53,7 @@ public class CourseView extends JFrame {
         gbc.gridwidth = 2;
         pnlRegister.add(btnSave, gbc);
 
-        add(pnlRegister, BorderLayout.CENTER);
+        add(pnlRegister);
     }
 
     public String getCourse() {
@@ -66,6 +66,15 @@ public class CourseView extends JFrame {
 
     public void addListenerSave (ActionListener actionListener) {
         btnSave.addActionListener(actionListener);
+    }
+
+    public void clearForm () {
+        txtCourse.setText("");
+        txtPrice.setText("");
+    }
+
+    public void viewForm () {
+        setVisible(true);
     }
 
 }
