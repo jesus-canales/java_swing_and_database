@@ -9,8 +9,11 @@ CREATE TABLE course
 (
     id       int auto_increment primary key,
     nombre   varchar(100),
-    creditos decimal(10, 2)
+    precio decimal(10, 2)
 );
 
 -- Listar tabla curso
 SELECT * FROM course;
+
+-- Eliminar tabla
+DROP TABLE course;
